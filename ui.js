@@ -190,5 +190,36 @@ const UI = {
         
         // Change color based on volatility
         volFill.className = `progress-fill ${data.volatility > 70 ? 'down' : (data.volatility < 30 ? 'up' : 'neutral')}`;
+    },
+
+    showSignalPopup(signal) {
+        const popup = document.getElementById('signal-popup');
+        if (!popup) return;
+        
+        // Prevent showing if already visible to avoid overriding, or could allow it
+        if (!popup.classList.contains('hidden')) return;
+        
+        const isBuy = signal.type === 'strong-buy';
+        const colorValue = isBuy ? '#10b981' : '#ef4444';
+        const glowValue = isBuy ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)';
+        
+        const titleEl = document.getElementById('popup-title');
+        titleEl.textContent = isBuy ? '🔥 STRONG BUY DETECTED' : '🚨 STRONG SELL DETECTED';
+        titleEl.style.color = colorValue;
+        titleEl.style.textShadow = `0 0 10px ${glowValue}`;
+        
+        document.getElementById('popup-details').innerHTML = `
+            <div class="detail-row"><span class="detail-label">Asset:</span> <span class="detail-value">${signal.marketName}</span></div>
+            <div class="detail-row"><span class="detail-label">Trade Type:</span> <span class="detail-value">${signal.category}</span></div>
+            <div class="detail-row"><span class="detail-label">Action:</span> <span class="detail-value" style="color:${colorValue}">${signal.signalText}</span></div>
+            <div class="detail-row" style="margin-top: 8px; font-size: 0.8rem; color: #a78bfa;">${signal.entryText}</div>
+        `;
+        
+        popup.classList.remove('hidden');
+    },
+
+    hideSignalPopup() {
+        const popup = document.getElementById('signal-popup');
+        if (popup) popup.classList.add('hidden');
     }
 };

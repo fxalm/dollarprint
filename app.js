@@ -165,6 +165,9 @@ function checkAndAddScannerSignals(symbol, predictions, currentEpoch) {
                 // Add new
                 state.scannerSignals.unshift(newSignal); // Add to beginning
                 newSignalsFound = true;
+                
+                // Show Popup for new strong signals
+                UI.showSignalPopup(newSignal);
             }
         }
     };
@@ -333,6 +336,14 @@ function setupEventListeners() {
                 const visibleSignals = state.scannerSignals.filter(s => s.categoryCode === filter);
                 UI.updateEntryScanner(visibleSignals, filter);
             });
+        });
+    }
+
+    // Popup Close Event
+    const closePopupBtn = document.getElementById('close-popup-btn');
+    if (closePopupBtn) {
+        closePopupBtn.addEventListener('click', () => {
+            UI.hideSignalPopup();
         });
     }
 }
